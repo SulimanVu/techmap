@@ -1,11 +1,10 @@
 const User = require("../models/User.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
 
 module.exports.userController = {
   signUp: async (req, res) => {
-    const { name, email, login, password, role, phone } = req.body;
+    const { name, email, login, password, role, phone, rating } = req.body;
     try {
       const candidate = await User.findOne({ login: login });
       if (candidate) {
@@ -19,15 +18,14 @@ module.exports.userController = {
         Number(process.env.BCRYPT_ROUNDS)
       );
 
-      const favorite = new mongoose.Types.ObjectId();
-
       const user = await User.create({
-        name: name,
-        email: email,
-        login: login,
-        phone: phone,
+        name,
+        email,
+        login,
+        phone,
         password: hash,
-        role: role,
+        role,
+        rating,
       });
 
       res.json(user);
